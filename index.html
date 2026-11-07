@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0d1320">
+  <title>Plumb Line</title>
+  <!-- YouTube Playables SDK. Outside YouTube it loads but does nothing useful, and the game falls back to localStorage. -->
+  <script src="https://www.youtube.com/game_api/v1"></script>
+</head>
+<body>
+  <div id="app">
+    <main class="frame" id="frame">
+      <canvas id="cv" aria-label="Plumb Line tower stacking game"></canvas>
+
+      <button class="pause-btn" id="btnPause" type="button" aria-label="Pause" hidden><i></i><i></i></button>
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+      <!-- Main menu -->
+      <section class="overlay" id="menu" aria-label="Main menu">
+        <p class="tag">Tower crane simulator</p>
+        <h1>Plumb<br>Line</h1>
+        <p class="note" id="bestLine">Best: 0 floors</p>
+        <div class="stack">
+          <button class="go" id="btnStart" type="button">Start game</button>
+          <button class="btn" id="btnContinue" type="button" disabled>
+            <span>Continue</span>
+            <small id="continueInfo">No saved run</small>
+          </button>
+          <button class="btn" id="btnSettings" type="button">Settings</button>
+        </div>
+        <button class="link" id="btnHow" type="button">How to play</button>
+      </section>
+
+      <!-- How to play -->
+      <section class="overlay overlay-solid" id="howto" aria-label="How to play" hidden>
+        <h2>How to play</h2>
+        <ul class="rules">
+          <li><b>1</b><span>Tap to drop the swinging floor.</span></li>
+          <li><b>2</b><span>The centre of the new floor must sit over the floor below. Miss and you lose a hard hat.</span></li>
+          <li><b>3</b><span>The whole stack is weighed on every joint. When the lean gauge passes its limit, everything falls.</span></li>
+          <li><b>4</b><span>Steel floors are heavy, timber floors are light. Wind picks up as you climb.</span></li>
+          <li><b>5</b><span>Three perfect drops in a row straighten the tower. Guide off scores 1.5x.</span></li>
+        </ul>
+        <p class="label">Medals</p>
+        <div class="medals" id="medals"></div>
+        <button class="go" id="btnHowBack" type="button">Back</button>
+      </section>
+
+      <!-- Settings -->
+      <section class="overlay overlay-solid" id="settings" aria-label="Settings" hidden>
+        <h2>Settings</h2>
+        <div class="panel">
+          <div class="row">
+            <span class="label" id="lblSound">Sound</span>
+            <button class="switch" id="btnSnd" type="button" role="switch" aria-checked="true" aria-labelledby="lblSound">On</button>
+          </div>
+          <p class="note" id="soundNote" hidden>Sound is turned off in YouTube. Use the sound button in the YouTube player to turn it on.</p>
+
+          <div id="sliders" class="sliders">
+            <label class="slider" for="rngMusic">
+              <span class="row"><span class="label">Music</span><output id="outMusic" for="rngMusic">70%</output></span>
+              <input id="rngMusic" type="range" min="0" max="100" step="5" value="70">
+            </label>
+            <label class="slider" for="rngSfx">
+              <span class="row"><span class="label">Effects</span><output id="outSfx" for="rngSfx">100%</output></span>
+              <input id="rngSfx" type="range" min="0" max="100" step="5" value="100">
+            </label>
+          </div>
+
+          <div class="row">
+            <span class="label" id="lblGuide">Drop guide</span>
+            <button class="switch" id="btnGuide" type="button" role="switch" aria-checked="true" aria-labelledby="lblGuide">On</button>
+          </div>
+          <p class="note">Playing with the guide off scores 1.5x points.</p>
+        </div>
+        <button class="go" id="btnSettingsBack" type="button">Back</button>
+      </section>
+
+      <!-- Pause menu (in game) -->
+      <section class="overlay overlay-solid" id="pause" aria-label="Paused" hidden>
+        <p class="tag">Game paused</p>
+        <h2>Paused</h2>
+        <dl class="stats">
+          <div><dt>Floors</dt><dd id="pFloors">0</dd></div>
+          <div><dt>Height</dt><dd id="pHeight">0 m</dd></div>
+          <div><dt>Score</dt><dd id="pScore">0</dd></div>
+        </dl>
+        <div class="stack">
+          <button class="go" id="btnResume" type="button">Resume</button>
+          <button class="btn" id="btnRestart" type="button">Restart</button>
+          <button class="btn" id="btnPauseSettings" type="button">Settings</button>
+          <button class="btn" id="btnToMenu" type="button">Main menu</button>
+        </div>
+      </section>
+
+      <!-- Game over -->
+      <section class="overlay" id="over" aria-label="Game over" hidden>
+        <p class="tag" id="overTag">Site closed</p>
+        <h2 id="overTitle">The stack came down</h2>
+        <dl class="stats">
+          <div><dt>Floors</dt><dd id="stFloors">0</dd></div>
+          <div><dt>Height</dt><dd id="stHeight">0 m</dd></div>
+          <div><dt>Score</dt><dd id="stScore">0</dd></div>
+        </dl>
+        <p class="note" id="overNote"></p>
+        <div class="stack">
+          <button class="go" id="btnAgain" type="button">Build again</button>
+          <button class="btn" id="btnOverMenu" type="button">Main menu</button>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
